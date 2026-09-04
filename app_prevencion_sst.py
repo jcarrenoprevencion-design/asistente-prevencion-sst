@@ -1,11 +1,10 @@
 import streamlit as st
-import os
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from io import BytesIO
 
 # -----------------------------------------------------------------------------
-# 1. CONFIGURACIÓN DE PÁGINA Y ESTILOS
+# 1. CONFIGURACIÓN DE PÁGINA Y ESTILOS VISUALES
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="Asistente de Normativa SST Chile",
@@ -38,7 +37,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# 2. FUNCIONES PARA GENERACIÓN DE EXCEL (MATRIZ LEGAL SST)
+# 2. GENERACIÓN DINÁMICA DE LA MATRIZ LEGAL EN EXCEL
 # -----------------------------------------------------------------------------
 def generar_matriz_excel():
     wb = openpyxl.Workbook()
@@ -202,7 +201,6 @@ if prompt_input := st.chat_input("Escribe tu consulta (ej: ¿Cuáles son las obl
                 
                 # Proceso RAG real
                 llm = ChatOpenAI(model="gpt-4o", temperature=0, openai_api_key=api_key)
-                # Aquí conectas con tu vectorstore persistente
                 response_text = f"Respuesta generada en tiempo real mediante RAG y GPT-4o para la consulta: '{prompt_input}'."
                 sources = ["DS 44 - Art. 15, Inciso 1"]
             except Exception as e:
@@ -220,7 +218,7 @@ if prompt_input := st.chat_input("Escribe tu consulta (ej: ¿Cuáles son las obl
                 response_text = "El **Artículo 74 del DS 594** fija el Límite Permisible Ponderado (LPP) para exposición a ruido continuo o intermitente en 85 dB(A) para una jornada de 8 horas diarias. Si se superan estos niveles, deben implementarse controles de ingeniería o administrativos y aplicar el protocolo PREXOR."
                 sources = ["DS 594 - Artículo 74 (Vigente)"]
             else:
-                response_text = f"Para responder con exactitud sobre: *"{prompt_input}"*, el sistema consulta el articulado del DS 44, DS 594 y Ley 16.744. Por favor ingresa tu API Key en la barra lateral para consultas dinámicas ilimitadas."
+                response_text = f"Para responder con exactitud sobre: *'{prompt_input}'*, el sistema consulta el articulado del DS 44, DS 594 y Ley 16.744. Por favor ingresa tu API Key en la barra lateral para consultas dinámicas ilimitadas."
                 sources = ["Base de Datos Normativa SST Chile"]
 
         st.markdown(response_text)
